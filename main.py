@@ -3,8 +3,8 @@ import pygame
 from scenes.game import Map, Camera
 from config.settings import Settings
 from scenes.teste import Quadrado
-from entities.player import Player
-from entities.enemy import Enemy
+from entities.Player import Player
+from entities.Enemy import Enemy
 from os import listdir
 from os.path import isfile, join
 
