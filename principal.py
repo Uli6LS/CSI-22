@@ -21,7 +21,7 @@ def run_game():
 
     # Cria o player
     # Posição x inicial: 400 (centro da tela), Posição y inicial: -32 (fora da tela acima)
-    player = Player(400, -32, 32, 32, velocidade=5)
+    player = Player(400, 600, 32, 32, velocidade=5)
 
     # Loop do jogo
     clock = pygame.time.Clock()
