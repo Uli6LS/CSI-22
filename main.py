@@ -2,11 +2,7 @@
 import pygame
 from scenes.game import Map, Camera
 from config.settings import Settings
-from scenes.teste import Quadrado
 from entities.Player import Player
-from entities.Enemy import Enemy
-from os import listdir
-from os.path import isfile, join
 
 def run_game():
     FPS = 60
@@ -42,7 +38,7 @@ def run_game():
                     player.jump()
 
         # Atualizações do jogador
-        player.loop(FPS)
+        player.loop(FPS,game_map)
 
         # Obtém as teclas pressionadas
         keys = pygame.key.get_pressed()

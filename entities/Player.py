@@ -55,15 +55,42 @@ class Player(pygame.sprite.Sprite):
                 if self.jump_count == 1:
                     self.fall_count = 0
 
-    def loop(self, fps):
+    def loop(self, fps, game_map):
         self.y_vel += min(1, (self.fall_count / fps) * self.GRAVITY)
         self.move(self.x_vel, self.y_vel)
+
+        # Verificar colisão com o chão
+        self.check_collision_with_ground(game_map)
+
+        if self.jump_count > 0 and self.fall_count > 0:
+            self.jump_count = 2  # Impede novos pulos até tocar o chão
+
+        if self.hit:
+            self.hit_count += 1
+            if self.hit_count > fps * 2:
+                self.hit = False
+                self.hit_count = 0
+
         self.fall_count += 1
         self.update_sprite()
 
     def check_collision_with_ground(self, game_map):
-        # Implemente a lógica de colisão com o chão aqui, se necessário
-        pass
+        # Calcula a futura posição do jogador
+        future_rect = self.rect.copy()
+        future_rect.y += self.y_vel  # Aplica a velocidade vertical
+
+        # Verifica se há colisão com o chão (tiles sólidos)
+        if game_map.check_collision(future_rect):
+            # Se houver colisão, ajusta a posição vertical para ficar no topo do chão
+            tile_size = 32  # Tamanho do tile (32x32 pixels, conforme definido)
+            tile_y = future_rect.bottom // tile_size  # Obtém a linha do tile abaixo do jogador
+            landing_y = tile_y * tile_size  # Calcula a posição no topo do chão
+
+            # Atualiza a posição vertical do jogador para ficar no topo do chão
+            self.rect.bottom = landing_y
+            self.landed()  # Marca que o jogador aterrissou no chão
+            self.y_vel = 0  # Reseta a velocidade vertical
+            self.jump_count = 0  # Permite outro pulo após tocar no chão
 
     def landed(self):
         self.fall_count = 0
