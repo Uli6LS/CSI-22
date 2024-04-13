@@ -1,12 +1,13 @@
+#main
 import pygame
 from scenes.game import Map, Camera
 from config.settings import Settings
 from entities.Player import Player
 
 def run_game():
-    FPS = 60
     pygame.init()
     pygame.display.set_caption("FUND")
+
     game_settings = Settings()
     screen = pygame.display.set_mode((game_settings.screen_width, game_settings.screen_height))
 
@@ -18,45 +19,58 @@ def run_game():
     # Cria a câmera
     camera = Camera(MAP_WIDTH, MAP_HEIGHT, game_settings.screen_width, game_settings.screen_height)
 
-    player = Player(400, 600, 32, 32, velocidade=10)  # Ajuste os parâmetros conforme necessário
+    # Cria o player
+    # Posição x inicial: 400 (centro da tela), Posição y inicial: -32 (fora da tela acima)
+    player = Player(400, 600, 32, 32, velocidade=5)
 
-    # Loop principal do jogo
+    # Loop do jogo
     clock = pygame.time.Clock()
     run = True
 
     while run:
-        clock.tick(FPS)
-
+        clock.tick(game_settings.fps)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-                break
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and player.jump_count < 2:
-                    player.jump()
-
-        # Atualizações do jogador
-        player.loop(FPS, game_map1)
-
-        # Obtém as teclas pressionadas
+        # Verifica o estado das teclas
         keys = pygame.key.get_pressed()
-        # Atualiza os deslocamentos com base nas teclas pressionadas
+
+        # Movimento para a esquerda
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            player.move_left()  # Atualiza a velocidade do jogador para esquerda
-        if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            player.move_right()  # Atualiza a velocidade do jogador para direita
+            player.move_left()
+        # Movimento para a direita
+        elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+            player.move_right()
+        # Nenhuma tecla de movimento pressionada, para o jogador
+        else:
+            player.stop_moving()
 
-        # Atualiza a câmera com base na velocidade do jogador
-        camera.camera.x += player.x_vel
+        # Verifica se a tecla de pulo (espaço) foi pressionada
+        if keys[pygame.K_SPACE]:
+            player.jump()
 
-        player.update()  # Atualiza o jogador
-        game_map1.draw(screen, camera)  # Desenha o mapa e o fundo deslocados pela câmera
-        player.draw(screen, player.rect.x - camera.camera.x)  # Desenha o jogador com ajuste de câmera
-        camera.update()  # Atualiza a câmera para o mapa não sair da tela
+        # Atualiza a posição do jogador para simular a queda
+        player.loop(game_settings.fps, game_map1)
+
+        # Atualiza a posição da câmera para seguir o jogador
+        camera.camera.x = player.rect.centerx - camera.width / 2
+        camera.camera.y = player.rect.centery - camera.height / 2
+
+        # Limita a posição da câmera para não sair dos limites do mapa
+        camera.camera.x = max(0, min(camera.camera.x, MAP_WIDTH - camera.width))
+        camera.camera.y = max(0, min(camera.camera.y, MAP_HEIGHT - camera.height))
+
+        # Desenha o mapa e o fundo deslocados pela câmera
+        game_map1.draw(screen, camera)
+
+        # Desenha o jogador
+        player.draw(screen, camera.camera.x)
+
         pygame.display.flip()
 
     pygame.quit()
+
 
 if __name__ == '__main__':
     run_game()
