@@ -1,4 +1,3 @@
-# main.py
 import pygame
 from scenes.game import Map, Camera
 from config.settings import Settings
@@ -38,19 +37,22 @@ def run_game():
                     player.jump()
 
         # Atualizações do jogador
-        player.loop(FPS,game_map)
+        player.loop(FPS, game_map1)
 
         # Obtém as teclas pressionadas
         keys = pygame.key.get_pressed()
         # Atualiza os deslocamentos com base nas teclas pressionadas
         if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            camera.camera.x -= player.velocidade
+            player.move_left()  # Atualiza a velocidade do jogador para esquerda
         if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            camera.camera.x += player.velocidade
+            player.move_right()  # Atualiza a velocidade do jogador para direita
+
+        # Atualiza a câmera com base na velocidade do jogador
+        camera.camera.x += player.x_vel
 
         player.update()  # Atualiza o jogador
         game_map1.draw(screen, camera)  # Desenha o mapa e o fundo deslocados pela câmera
-        player.draw(screen , camera.camera.x)  # Desenha o jogador com o offset_x da câmera
+        player.draw(screen, player.rect.x - camera.camera.x)  # Desenha o jogador com ajuste de câmera
         camera.update()  # Atualiza a câmera para o mapa não sair da tela
         pygame.display.flip()
 
@@ -58,4 +60,3 @@ def run_game():
 
 if __name__ == '__main__':
     run_game()
-
