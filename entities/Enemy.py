@@ -3,74 +3,63 @@ import pygame
 from utils.Imports import Imports
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self, x, y, distance, screen, player, game_map):
-        super(Enemy, self).__init__()
+    ANIMATION_DELAY = 2
+    def __init__(self, x, y, width, screen, player, game_map, spawn_x, move_range):
+        super().__init__()
+        self.rect = pygame.Rect(x, y, width, width)
+        self.x_vel = 2  # Velocidade horizontal inicial
+        self.y_vel = 0
+        self.direction = "right"
+        self.animation_count = 0
+        self.velocidade = 2
         self.screen = screen
         self.player = player
         self.game_map = game_map
+        self.spawn_x = spawn_x  # Posição inicial do inimigo no eixo X
+        self.move_range = move_range  # Intervalo de movimento permitido (em pixels)
 
-        # Define the initial position of the enemy
-        self.rect = pygame.Rect(x, y, 32, 32)
+        # Definir os limites de movimento do inimigo
+        self.min_x = self.spawn_x - self.move_range  # Limite esquerdo do movimento
+        self.max_x = self.spawn_x + self.move_range  # Limite direito do movimento
 
-        # Adjust enemy's position to be on solid ground
-        self.adjust_position_to_ground()
-
-        # Define movement boundaries for the enemy
-        self.start_x = self.rect.x
-        self.end_x = self.rect.x + distance
-        self.direction = 1  # Start moving right initially
-        self.velocidade = 2  # Movement speed of the enemy
-
-        # Load enemy sprites
-        self.SPRITES = Imports().load_sprite_sheets("MainCharacters", "MaskDude", 32, 32, True)
-        self.sprite_sheet = "run"
-        self.animation_count = 0
-        self.image = None
-
-    def adjust_position_to_ground(self):
-        """Adjusts the enemy's position to be on solid ground."""
-        tile_size = 32
-        x_tile = self.rect.centerx // tile_size
-        y_tile = self.rect.bottom // tile_size
-
-        # Find the nearest solid ground below the enemy's initial position
-        while not self.game_map.is_tile_solid(x_tile, y_tile):
-            y_tile += 1
-
-        # Set the enemy's position to the top of the solid ground tile
-        self.rect.bottom = y_tile * tile_size
-
-    def update(self):
-        # Update the enemy's position based on the current direction
-        self.rect.x += self.direction * self.velocidade
-
-        # Check if the enemy has reached its movement boundaries
-        if self.rect.x <= self.start_x or self.rect.x >= self.end_x:
-            self.direction *= -1  # Reverse the direction
-
-        # Check collision with the player
-        if pygame.sprite.collide_rect(self, self.player):
-            self.player.make_hit()  # Cause damage to the player
-            self.player.hit = True  # Set player's hit status to true
-
-        # Update the enemy's sprite animation
+        self.load_sprites()
         self.update_sprite()
 
+    def load_sprites(self):
+        # Carrega os sprites do inimigo
+        self.SPRITES = Imports().load_sprite_sheets("MainCharacters", "MaskDude", 32, 32, True)
+
+    def update(self):
+        # Atualiza a posição horizontal do inimigo
+        self.rect.x += self.x_vel
+
+        # Verifica se o inimigo atingiu os limites de movimento
+        if self.rect.left < self.min_x:
+            self.rect.left = self.min_x
+            self.x_vel = -self.x_vel  # Inverte a direção para a direita
+            self.direction = "right"
+        elif self.rect.right > self.max_x:
+            self.rect.right = self.max_x
+            self.x_vel = -self.x_vel  # Inverte a direção para a esquerda
+            self.direction = "left"
+
+        self.update_sprite()
+
+    def check_collision_with_ground(self):
+        future_rect = self.rect.copy()
+        future_rect.y += self.y_vel
+
+        # Verifica colisão com o chão (tiles sólidos)
+        if self.game_map.check_collision(future_rect):
+            # Muda a direção se bater em uma parede
+            self.x_vel = -self.x_vel
+
     def update_sprite(self):
-        sprite_sheet_name = self.sprite_sheet
-        if sprite_sheet_name in self.SPRITES:
-            sprites = self.SPRITES[sprite_sheet_name]
-            sprite_index = (self.animation_count // 2) % len(sprites)
-            self.image = sprites[sprite_index]
-            self.animation_count += 1
+        sprite_sheet_name = "run_" + self.direction
+        sprites = self.SPRITES[sprite_sheet_name]
+        sprite_index = (self.animation_count // self.ANIMATION_DELAY) % len(sprites)
+        self.sprite = sprites[sprite_index]
+        self.animation_count += 1
 
-    def draw(self):
-        if self.image is not None:
-            self.screen.blit(self.image, self.rect)
-
-    def set_position(self, x, y):
-        # Set the enemy's position
-        self.rect.x = x
-        self.rect.y = y
-        self.start_x = x
-        self.end_x = x + (self.end_x - self.start_x)  # Maintain the same movement range relative to the new start position
+    def draw(self, screen):
+        self.screen.blit(self.sprite, self.rect)
