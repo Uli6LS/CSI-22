@@ -25,7 +25,6 @@ def run_game():
     player = Player(100, 100, 50, 50, velocidade=10)
 
     # Cria o inimigo
-    # Cria o inimigo
     spawn_x = 500  # Posição inicial do inimigo no eixo X
     move_range = 200  # Intervalo de movimento permitido (em pixels)
     enemy = Enemy(spawn_x, 550, 200, screen, player, game_map1, spawn_x, move_range)
@@ -67,7 +66,7 @@ def run_game():
         # Dentro do loop principal do jogo
         game_map1.draw(screen, camera)  # Desenha o mapa na tela
         player.draw(screen, camera.camera.x)  # Desenha o jogador na tela
-        enemy.draw(screen)  # Desenha o inimigo na tela
+        enemy.draw(camera)  # Desenha o inimigo na tela
 
         # Update and draw the enemy
         enemy.update()

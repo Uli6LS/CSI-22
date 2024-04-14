@@ -4,14 +4,13 @@ from utils.Imports import Imports
 
 class Enemy(pygame.sprite.Sprite):
     ANIMATION_DELAY = 2
+    SPEED = 2  # Velocidade constante do inimigo
+
     def __init__(self, x, y, width, screen, player, game_map, spawn_x, move_range):
         super().__init__()
         self.rect = pygame.Rect(x, y, width, width)
-        self.x_vel = 2  # Velocidade horizontal inicial
-        self.y_vel = 0
         self.direction = "right"
         self.animation_count = 0
-        self.velocidade = 2
         self.screen = screen
         self.player = player
         self.game_map = game_map
@@ -30,29 +29,21 @@ class Enemy(pygame.sprite.Sprite):
         self.SPRITES = Imports().load_sprite_sheets("MainCharacters", "MaskDude", 32, 32, True)
 
     def update(self):
-        # Atualiza a posição horizontal do inimigo
-        self.rect.x += self.x_vel
+        # Atualiza a posição horizontal do inimigo com velocidade constante
+        if self.direction == "right":
+            self.rect.x += self.SPEED
+        else:
+            self.rect.x -= self.SPEED
 
         # Verifica se o inimigo atingiu os limites de movimento
         if self.rect.left < self.min_x:
             self.rect.left = self.min_x
-            self.x_vel = -self.x_vel  # Inverte a direção para a direita
-            self.direction = "right"
+            self.direction = "right"  # Inverte a direção para a direita
         elif self.rect.right > self.max_x:
             self.rect.right = self.max_x
-            self.x_vel = -self.x_vel  # Inverte a direção para a esquerda
-            self.direction = "left"
+            self.direction = "left"  # Inverte a direção para a esquerda
 
         self.update_sprite()
-
-    def check_collision_with_ground(self):
-        future_rect = self.rect.copy()
-        future_rect.y += self.y_vel
-
-        # Verifica colisão com o chão (tiles sólidos)
-        if self.game_map.check_collision(future_rect):
-            # Muda a direção se bater em uma parede
-            self.x_vel = -self.x_vel
 
     def update_sprite(self):
         sprite_sheet_name = "run_" + self.direction
@@ -61,5 +52,9 @@ class Enemy(pygame.sprite.Sprite):
         self.sprite = sprites[sprite_index]
         self.animation_count += 1
 
-    def draw(self, screen):
-        self.screen.blit(self.sprite, self.rect)
+    def draw(self, camera):
+        # Calcula a posição relativa ao cenário de fundo
+        relative_position = self.rect.x - camera.camera.x
+
+        # Desenha o sprite do inimigo na posição relativa
+        self.screen.blit(self.sprite, (relative_position, self.rect.y))
