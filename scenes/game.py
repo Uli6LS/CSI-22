@@ -14,6 +14,42 @@ class Camera:
         # Limita a câmera para não sair dos limites do mapa
         self.camera.clamp_ip(pygame.Rect(0, 0, self.mapwidth, self.mapheight))
 
+    def pausado(self, screen):
+        font = pygame.font.Font(None, 74)  # Escolha a fonte para renderizar o texto
+        text = font.render('Pausado', True, (255, 255, 255))  # Renderiza o texto
+        text_rect = text.get_rect(center=(self.width/2,self.height/2))  # Centraliza o texto
+        s = pygame.Surface((self.width,self.height))  # Cria uma nova superfície
+        s.set_alpha(189)  # Define o nível de transparência (0-255, 0 é totalmente transparente)
+        s.fill((0,0,0))  # Preenche a superfície com preto
+        screen.blit(s, (0,0))  # Desenha a superfície na tela
+        screen.blit(text, text_rect)
+
+    def show_level_transition_screen(self, screen, level_number,mission):
+        font1 = pygame.font.Font(None, 74)  # Escolha a fonte para renderizar o texto
+        font2 = pygame.font.Font(None, 34)
+        if(level_number == 4):
+            level_text = font1.render('Parabéns', True, (255, 255, 255))  # Renderiza o texto do nível
+        else: level_text = font1.render(f'Nivel {level_number}', True, (255, 255, 255))  # Renderiza o texto do nível
+        mission_text = font2.render(mission, True, (255, 255, 255))  # Renderiza o texto da missão
+        acao_text = font2.render('(aperte a tecla espaço para continuar)', True, (255, 255, 255))
+        rect = pygame.Rect(0, 0, self.width, self.height)
+        pygame.draw.rect(screen, (0, 0, 0), rect)
+        screen.blit(level_text, (self.width/2 - level_text.get_width()/2, self.height/2 - level_text.get_height()/2))
+        screen.blit(mission_text, (self.width/2 - mission_text.get_width()/2, self.height/2 + level_text.get_height()))
+        screen.blit(acao_text, (self.width/2 - acao_text.get_width()/2 ,self.height/2 + mission_text.get_height()+ 200))
+
+        pygame.display.flip()
+
+        waiting_for_key = True
+        while waiting_for_key:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    waiting_for_key = False
+                    break
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:  # Quando o usuário apertar enter
+                        waiting_for_key = False
+
 class Map:
     def __init__(self, filename):
         self.tiles_data = self.load_map(filename)
@@ -36,6 +72,7 @@ class Map:
         # Define as coordenadas e o tamanho dos tiles no tileset
         tile_info = {
             '86': {'x': 704, 'y': 256, 'width': 32, 'height': 32},
+            '945': {'x': 544, 'y': 928, 'width': 32, 'height': 32}
             # Adicione mais tiles conforme necessário
         }
         # Recorta cada tile e armazena no dicionário
@@ -54,7 +91,7 @@ class Map:
     def draw_background(self, screen, camera):
         """Desenha a imagem de fundo ajustada pela câmera."""
         # Calcula a posição da imagem de fundo com base na posição da câmera
-        background_position = self.background_rect.move(-camera.camera.x*0.5, -camera.camera.y)
+        background_position = self.background_rect.move(-camera.camera.x, -camera.camera.y)
         screen.blit(self.background_image, background_position)
 
     def draw(self, screen, camera):
@@ -76,7 +113,7 @@ class Map:
         """Verifica se o tile na posição (x, y) é sólido."""
         tile_number = self.tiles_data[y][x]
         # Defina quais números de tiles são considerados sólidos
-        solid_tiles = ['86']  # Exemplo: '86' é um tile sólido
+        solid_tiles = ['86', '945']  # Exemplo: '86' é um tile sólido
         return tile_number in solid_tiles
 
     def check_collision(self, rect):

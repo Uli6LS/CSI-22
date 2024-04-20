@@ -1,76 +1,140 @@
 #main
 import pygame
+
+from entities.Enemy import Capivara, Carro, Boss
 from scenes.game import Map, Camera
 from config.settings import Settings
-from entities.Player import Player
+from entities.Player import BoyPlayer, GirlPlayer
 
-def run_game():
-    pygame.init()
-    pygame.display.set_caption("FUND")
+def run_game(personagem, screen):
+    #pygame.init()
+    #pygame.display.set_caption("FUND")
 
     game_settings = Settings()
-    screen = pygame.display.set_mode((game_settings.screen_width, game_settings.screen_height))
+    #screen = pygame.display.set_mode((game_settings.screen_width, game_settings.screen_height))
 
     # Configurações do mapa
     MAP_WIDTH, MAP_HEIGHT = 12800, 640
-    game_map1 = Map('scenes/mapa1.csv')  # Substitua pelo caminho correto do arquivo CSV
-    game_map1.set_background('assets/Background/backgroundF1.png')
+    background_images = ['assets/Background/backgroundF1.png', 'assets/Background/backgroundF2.png', 'assets/Background/backgroundF3.png']
+    game_maps = [Map('scenes/mapa1.csv'), Map('scenes/mapa2.csv'), Map('scenes/mapa3.csv')]
+    # Itera sobre ambas as listas juntas usando zip
+    for game_map, bg_image in zip(game_maps, background_images):
+        game_map.set_background(bg_image)
 
     # Cria a câmera
     camera = Camera(MAP_WIDTH, MAP_HEIGHT, game_settings.screen_width, game_settings.screen_height)
 
     # Cria o player
-    # Posição x inicial: 400 (centro da tela), Posição y inicial: -32 (fora da tela acima)
-    player = Player(100, 100, 50, 50, velocidade=5)
+    if( personagem == 1):
+        player= BoyPlayer(100, 100, 50, 50, velocidade=10)
+    if(personagem ==2):
+        player= GirlPlayer(100, 100, 50, 50, velocidade=10)
 
     # Loop do jogo
     clock = pygame.time.Clock()
     run = True
+    paused = False
+    current_level = 1
+    inicio = True
 
     while run:
         clock.tick(game_settings.fps)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+                break
 
-        # Verifica o estado das teclas
-        keys = pygame.key.get_pressed()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE and player.jump_count < 2 and not paused:
+                    player.jump()
+                if event.key == pygame.K_ESCAPE:  # Press 'p' to pause/unpause
+                    paused = not paused
+                    camera.pausado(screen)
 
-        # Movimento para a esquerda
-        if keys[pygame.K_LEFT] or keys[pygame.K_a]:
-            player.move_left()
-        # Movimento para a direita
-        elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
-            player.move_right()
-        # Nenhuma tecla de movimento pressionada, para o jogador
-        else:
-            player.stop_moving()
+        if not paused:
+            # Handle player input
+            keys = pygame.key.get_pressed()
+            if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+                player.move_left()
+            elif keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+                player.move_right()
+            else:
+                player.stop_moving()
 
-        # Verifica se a tecla de pulo (espaço) foi pressionada
-        if keys[pygame.K_SPACE]:
-            player.jump()
+            if ( current_level == 1 and inicio ): #começo nivel 1
+                inicio = False
+                camera.show_level_transition_screen(screen, current_level, 'Você esqueceu a lista, volte ao H8A para pegar')
+                # Cria o inimigo da fase
+                spawn_x = 400  # Posição inicial do inimigo no eixo X
+                move_range = 200  # Intervalo de movimento permitido (em pixels)
 
-        # Atualiza a posição do jogador para simular a queda
-        player.loop(game_settings.fps, game_map1)
+                # Cria o inimigo da fase
+                spawn_x = 400  # Posição inicial do inimigo no eixo X
+                move_range = 400  # Intervalo de movimento permitido (em pixels)
+                enemy1 = Capivara(spawn_x, 520, 200, screen, player, game_maps[current_level-1], spawn_x, move_range)
 
-        # Atualiza a posição da câmera para seguir o jogador
-        camera.camera.x = player.rect.centerx - camera.width / 2
-        camera.camera.y = player.rect.centery - camera.height / 2
+                # Cria o inimigo da fase
+                spawn_x = 1000  # Posição inicial do inimigo no eixo X
+                move_range = 2000  # Intervalo de movimento permitido (em pixels)
+                enemy2 = Carro(spawn_x, 400, 200, screen, player, game_maps[current_level-1], spawn_x, move_range)
+                
+            if ( current_level == 1 and player.rect.x >= MAP_WIDTH - 700): #se chegar no final do nivel 1 passa pro nivel 2
+                current_level += 1
+                camera.show_level_transition_screen(screen, current_level, 'Volte ao FUND, tem um exame te esperando')
+                
+                player.rect.x =  MAP_WIDTH-400  # Reset player position
+                camera.camera.x =  MAP_WIDTH-400 # Reset camera position
 
-        # Limita a posição da câmera para não sair dos limites do mapa
-        camera.camera.x = max(0, min(camera.camera.x, MAP_WIDTH - camera.width))
-        camera.camera.y = max(0, min(camera.camera.y, MAP_HEIGHT - camera.height))
+                # Cria o inimigo da fase
+                spawn_x = 5000  # Posição inicial do inimigo no eixo X
+                move_range = 400  # Intervalo de movimento permitido (em pixels)
+                enemy1 = Capivara(spawn_x, 520, 200, screen, player, game_maps[current_level-1], spawn_x, move_range)
 
-        # Desenha o mapa e o fundo deslocados pela câmera
-        game_map1.draw(screen, camera)
+                # Cria o inimigo da fase
+                spawn_x = 5000  # Posição inicial do inimigo no eixo X
+                move_range = 2000  # Intervalo de movimento permitido (em pixels)
+                enemy2 = Carro(spawn_x, 400, 200, screen, player, game_maps[current_level-1], spawn_x, move_range)
 
-        # Desenha o jogador
-        player.draw(screen, camera.camera.x)
+
+            if ( current_level == 2 and player.rect.x <= 200): #se chegar no inicio do nivel 2 passa pro nivel 3
+                current_level += 1
+                camera.show_level_transition_screen(screen, current_level, 'Encontre o exame no final do corredor')
+                player.rect.x =  0  # Reset player position
+                camera.camera.x =  0 # Reset camera position
+
+                # Cria o inimigo da fase
+                spawn_x = MAP_WIDTH - 300  # Posição inicial do inimigo no eixo X
+                move_range = 300  # Intervalo de movimento permitido (em pixels)
+                enemy2 = Boss(spawn_x, 270, 200, screen, player, game_maps[current_level-1], spawn_x, move_range)
+
+
+            if ( current_level == 3 and player.rect.x >= MAP_WIDTH-200): #se chegar no final, vence
+                current_level += 1
+                camera.show_level_transition_screen(screen, current_level, 'Você concluiu o jogo')
+            
+            if current_level >= 4:  # If there are no more levels, end the game
+                    run = False
+
+            # Update player position and behavior
+            player.loop(game_settings.fps, game_maps[current_level-1])
+
+            # Update camera position
+            camera.camera.x = player.rect.centerx - camera.width / 2
+            camera.camera.y = player.rect.centery - camera.height / 2
+            camera.camera.x = max(0, min(camera.camera.x, MAP_WIDTH - camera.width))
+            camera.camera.y = max(0, min(camera.camera.y, MAP_HEIGHT - camera.height))
+
+            # Dentro do loop principal do jogo
+            game_maps[current_level-1].draw(screen, camera)  # Desenha o mapa na tela
+            player.draw(screen, camera.camera.x)  # Desenha o jogador na tela
+            enemy1.draw(camera)  # Desenha o inimigo na tela
+            enemy2.draw(camera)
+
+            # Update and draw the enemy
+            enemy1.update()  
+            enemy2.update()
 
         pygame.display.flip()
-
     pygame.quit()
 
 
-if __name__ == '__main__':
-    run_game()

@@ -1,10 +1,11 @@
 #Player
 import pygame
 from utils.Imports import Imports
+from config.settings import Settings
 
 class Player(pygame.sprite.Sprite):
     GRAVITY = 1
-    ANIMATION_DELAY = 2
+    ANIMATION_DELAY = 3
 
     def __init__(self, x, y, width, height, velocidade=5):
         super().__init__()
@@ -20,10 +21,6 @@ class Player(pygame.sprite.Sprite):
         self.hit_count = 0
         self.velocidade = velocidade
         self.load_sprites()
-
-    def load_sprites(self):
-        # Carrega os sprites do jogador
-        self.SPRITES = Imports().load_sprite_sheets("MainCharacters", "NinjaFrog", 32, 32, True)
 
     def move(self, dx, dy):
         self.rect.x += dx
@@ -47,13 +44,12 @@ class Player(pygame.sprite.Sprite):
         self.x_vel = 0
 
     def jump(self):
-        if self.jump_count < 2:
-            if self.jump_count == 0 or self.fall_count == 0:
-                self.y_vel = -self.GRAVITY * 8
-                self.animation_count = 0
-                self.jump_count += 1
-                if self.jump_count == 1:
-                    self.fall_count = 0
+        self.y_vel = -self.GRAVITY * 8
+        self.animation_count = 0
+        self.jump_count += 1
+        if self.jump_count ==2:
+            self.y_vel = -self.GRAVITY * 10
+            self.fall_count = 0
 
     def loop(self, fps, game_map):
         self.y_vel += min(1, (self.fall_count / fps) * self.GRAVITY)
@@ -61,9 +57,6 @@ class Player(pygame.sprite.Sprite):
 
         # Verificar colisão com o chão
         self.check_collision_with_ground(game_map)
-
-        if self.jump_count > 0 and self.fall_count > 0:
-            self.jump_count = 2  # Impede novos pulos até tocar o chão
 
         if self.hit:
             self.hit_count += 1
@@ -103,9 +96,7 @@ class Player(pygame.sprite.Sprite):
 
     def update_sprite(self):
         sprite_sheet = "idle"
-        if self.hit:
-            sprite_sheet = "hit"
-        elif self.y_vel < 0:
+        if self.y_vel < 0:
             if self.jump_count == 1:
                 sprite_sheet = "jump"
             elif self.jump_count == 2:
@@ -125,6 +116,26 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         self.rect = self.sprite.get_rect(topleft=(self.rect.x, self.rect.y))
         self.mask = pygame.mask.from_surface(self.sprite)
+        self.rect.clamp_ip(pygame.Rect(0, 0, 12785, 640))
 
     def draw(self, win, offset_x):
         win.blit(self.sprite, (self.rect.x - offset_x, self.rect.y))
+
+class GirlPlayer(Player):
+    def __init__(self, x, y, width, height, velocidade=5):
+        super().__init__(x, y, width, height, velocidade)
+        self.load_sprites()
+
+    def load_sprites(self):
+        # Carrega os sprites da menina
+        self.SPRITES = Imports().load_sprite_sheets("MainCharacters", "girl", 64, 96, True)
+
+
+class BoyPlayer(Player):
+    def __init__(self, x, y, width, height, velocidade=5):
+        super().__init__(x, y, width, height, velocidade)
+        self.load_sprites()
+
+    def load_sprites(self):
+        # Carrega os sprites do menino
+        self.SPRITES = Imports().load_sprite_sheets("MainCharacters", "boy", 64, 96, True)

@@ -1,5 +1,4 @@
 #settings.py
-import pygame
 
 class Settings:
     def __init__(self):
