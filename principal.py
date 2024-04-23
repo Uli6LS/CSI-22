@@ -1,7 +1,7 @@
 #main
 import pygame
 
-from entities.Enemy import Capivara, Carro, Boss
+from entities.Enemy import Capivara, Carro, Boss, Book
 from scenes.game import Map, Camera
 from config.settings import Settings
 from entities.Player import BoyPlayer, GirlPlayer
@@ -77,6 +77,10 @@ def run_game(personagem, screen):
                 spawn_x = 1000  # Posição inicial do inimigo no eixo X
                 move_range = 2000  # Intervalo de movimento permitido (em pixels)
                 enemy2 = Carro(spawn_x, 400, 200, screen, player, game_maps[current_level-1], spawn_x, move_range)
+
+                spawn_x = 410  # Posição inicial do inimigo no eixo X
+                move_range = 2000  # Intervalo de movimento permitido (em pixels)
+                enemy3 = Book(spawn_x, 400, 100, screen, player, game_maps[current_level - 1], spawn_x, move_range)
                 
             if ( current_level == 1 and player.rect.x >= MAP_WIDTH - 700): #se chegar no final do nivel 1 passa pro nivel 2
                 current_level += 1
@@ -129,10 +133,12 @@ def run_game(personagem, screen):
             player.draw(screen, camera.camera.x)  # Desenha o jogador na tela
             enemy1.draw(camera)  # Desenha o inimigo na tela
             enemy2.draw(camera)
+            enemy3.draw(camera)
 
             # Update and draw the enemy
             enemy1.update()  
             enemy2.update()
+            enemy3.update()
 
         pygame.display.flip()
     pygame.quit()

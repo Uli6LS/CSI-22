@@ -61,7 +61,7 @@ class Capivara(Enemy):
         self.load_sprites()
 
     def load_sprites(self):
-        # Carrega os sprites da menina
+        #carrega sprites da capivara
         self.SPRITES = Imports().load_sprite_sheets("MainCharacters", "capivara", 64, 96, True)
 
 
@@ -71,7 +71,7 @@ class Carro(Enemy):
         self.load_sprites()
 
     def load_sprites(self):
-        # Carrega os sprites do menino
+        # Carrega os sprites do carro
         self.SPRITES = Imports().load_sprite_sheets("items", "jeep_2", 256, 96, True)
 
 class Boss(Enemy):
@@ -80,5 +80,17 @@ class Boss(Enemy):
         self.load_sprites()
 
     def load_sprites(self):
-        # Carrega os sprites do menino
+        # Carrega os sprites do boss
         self.SPRITES = Imports().load_sprite_sheets("MainCharacters", "boss", 128, 150, True)
+
+class Book(Enemy):
+    def __init__(self, x, y, width, screen, player, game_map, spawn_x, move_range):
+        super().__init__(x, y, width, screen, player, game_map, spawn_x, move_range)
+        self.load_sprites()
+
+    def load_sprites(self):
+        # Carrega os sprites do boss
+        self.SPRITES = Imports().load_sprite_sheets("MainCharacters", "book", 90, 110, True)
+        #self.SPRITES = Imports().load_sprite_sheets("MainCharacters", "MaskDude", 32, 32, True)
+
+
