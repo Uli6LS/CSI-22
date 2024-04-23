@@ -82,3 +82,12 @@ class Boss(Enemy):
     def load_sprites(self):
         # Carrega os sprites do menino
         self.SPRITES = Imports().load_sprite_sheets("MainCharacters", "boss", 128, 150, True)
+
+class Book(Enemy):
+    def __init__(self, x, y, width, screen, player, game_map, spawn_x, move_range):
+        super().__init__(x, y, width, screen, player, game_map, spawn_x, move_range)
+        self.load_sprites()
+
+    def load_sprites(self):
+        # Carrega os sprites do menino
+        self.SPRITES = Imports().load_sprite_sheets("MainCharacters", "book", 90, 110, True)

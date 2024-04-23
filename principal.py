@@ -1,7 +1,7 @@
 #main
 import pygame
 
-from entities.Enemy import Capivara, Carro, Boss
+from entities.Enemy import Capivara, Carro, Boss, Book
 from scenes.LifeCounter import LifeCounter
 from scenes.game import Map, Camera
 from config.settings import Settings
@@ -116,6 +116,10 @@ def run_game(personagem, screen):
                 move_range = 2000  # Intervalo de movimento permitido (em pixels)
                 enemy2 = Carro(spawn_x, 400, 200, screen, player, game_maps[current_level-1], spawn_x, move_range)
 
+                # auxiliar para colisão
+                enemy_group = pygame.sprite.Group()  # Grupo para os inimigos
+                enemy_group.add(enemy1, enemy2)  # Adiciona os inimigos ao grupo
+
 
             if ( current_level == 2 and player.rect.x <= 200): #se chegar no inicio do nivel 2 passa pro nivel 3
                 current_level += 1
@@ -124,10 +128,18 @@ def run_game(personagem, screen):
                 camera.camera.x =  0 # Reset camera position
 
                 # Cria o inimigo da fase
+
+                spawn_x = MAP_WIDTH - 300  # Posição inicial do inimigo no eixo X
+                move_range = 300  # Intervalo de movimento permitido (em pixels)
+                enemy1 = Book(spawn_x, 270, 200, screen, player, game_maps[current_level - 1], spawn_x, move_range)
+
                 spawn_x = MAP_WIDTH - 300  # Posição inicial do inimigo no eixo X
                 move_range = 300  # Intervalo de movimento permitido (em pixels)
                 enemy2 = Boss(spawn_x, 270, 200, screen, player, game_maps[current_level-1], spawn_x, move_range)
 
+                # auxiliar para colisão
+                enemy_group = pygame.sprite.Group()  # Grupo para os inimigos
+                enemy_group.add(enemy1, enemy2)  # Adiciona os inimigos ao grupo
 
             if ( current_level == 3 and player.rect.x >= MAP_WIDTH-200): #se chegar no final, vence
                 current_level += 1
