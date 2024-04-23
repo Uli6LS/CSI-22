@@ -1,7 +1,7 @@
 #main
 import pygame
 
-from entities.Enemy import Capivara, Carro, Boss
+from entities.Enemy import Capivara, Carro, Boss, Book
 from scenes.LifeCounter import LifeCounter
 from scenes.game import Map, Camera
 from config.settings import Settings
@@ -32,7 +32,7 @@ def run_game(personagem, screen):
     if(personagem ==2):
         player= GirlPlayer(100, 100, 50, 50, velocidade=10)
     if (personagem == 3):
-        player = SapoNinja(100, 100, 50, 50, velocidade=10)
+        player = SapoNinja(100, 100, 50, 50, velocidade=30)
 
     # Loop do jogo
     clock = pygame.time.Clock()
@@ -42,7 +42,8 @@ def run_game(personagem, screen):
     inicio = True
 
     # Inicializa o contador de vidas para o jogador
-    life_counter = LifeCounter(initial_lives=3)  # Inicializa com 3 vidas
+    life_counter = LifeCounter(player)  # Inicializa com 3 vidas
+
 
     while run:
         clock.tick(game_settings.fps)
@@ -60,19 +61,12 @@ def run_game(personagem, screen):
 
         if not paused:
 
-            # Verifica se o jogador ainda está vivo usando LifeCounter
-            if life_counter.get_vidas_restantes() > 0:
-                # O jogador está vivo
-                life_counter.alive = True
-            else:
-                # O jogador está morto
-                life_counter.alive = False
-
             # Verifica se o jogador ainda está vivo
             if not player.is_alive:
-                # Se o jogador não estiver mais vivo, faça algo (ex: encerrar o jogo)
-                camera.show_death_screen(screen)  # Mostra a tela de morte
-                #run = False
+                space_pressed = camera.show_death_screen(screen)
+                if space_pressed:
+                    run_game(personagem, screen)  # Reinicia o jogo
+                    return  # Sai do loop atual
 
             # Handle player input
             keys = pygame.key.get_pressed()
@@ -122,6 +116,10 @@ def run_game(personagem, screen):
                 move_range = 2000  # Intervalo de movimento permitido (em pixels)
                 enemy2 = Carro(spawn_x, 400, 200, screen, player, game_maps[current_level-1], spawn_x, move_range)
 
+                # auxiliar para colisão
+                enemy_group = pygame.sprite.Group()  # Grupo para os inimigos
+                enemy_group.add(enemy1, enemy2)  # Adiciona os inimigos ao grupo
+
 
             if ( current_level == 2 and player.rect.x <= 200): #se chegar no inicio do nivel 2 passa pro nivel 3
                 current_level += 1
@@ -130,10 +128,18 @@ def run_game(personagem, screen):
                 camera.camera.x =  0 # Reset camera position
 
                 # Cria o inimigo da fase
+
+                spawn_x = MAP_WIDTH - 1000  # Posição inicial do inimigo no eixo X
+                move_range = 300  # Intervalo de movimento permitido (em pixels)
+                enemy1 = Book(spawn_x, 350, 200, screen, player, game_maps[current_level - 1], spawn_x, move_range)
+
                 spawn_x = MAP_WIDTH - 300  # Posição inicial do inimigo no eixo X
                 move_range = 300  # Intervalo de movimento permitido (em pixels)
                 enemy2 = Boss(spawn_x, 270, 200, screen, player, game_maps[current_level-1], spawn_x, move_range)
 
+                # auxiliar para colisão
+                enemy_group = pygame.sprite.Group()  # Grupo para os inimigos
+                enemy_group.add(enemy1, enemy2)  # Adiciona os inimigos ao grupo
 
             if ( current_level == 3 and player.rect.x >= MAP_WIDTH-200): #se chegar no final, vence
                 current_level += 1
@@ -157,14 +163,20 @@ def run_game(personagem, screen):
             enemy1.draw(camera)  # Desenha o inimigo na tela
             enemy2.draw(camera)
 
+            life_counter.draw_hearts(screen)  # Desenha os corações cheios e vazios
+
             # Update and draw the enemy
             enemy1.update()  
             enemy2.update()
 
             #Adicionar colisao
+
             if pygame.sprite.spritecollide(player, enemy_group, False):
                 player.make_hit()
-                life_counter.perder_vida()  # Reduz o número de vidas restantes do jogador
+                if life_counter.hit_cooldown ==0 :#game_settings.fps *2:
+                    life_counter.perder_vida()  # Reduz o número de vidas restantes do jogador
+
+            life_counter.update()
 
         pygame.display.flip()
     pygame.quit()

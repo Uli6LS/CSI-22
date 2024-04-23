@@ -23,13 +23,10 @@ class MainMenu:
         print(index)
 
     def start_game(self):
-        run_game(self.character, self.surface)
-        pygame.quit()
-
-    def restart_game(self):
-        self.character = 1  # Reinicia o personagem para o padrão
-        self.run_game()  # Reinicia o jogo
-
+        while True:
+            run_game(self.character, self.surface)
+            # Aguarda o jogo terminar para retornar ao menu principal
+            self.menu.mainloop(self.surface)  # Mostra o menu principal novamente
     def settings(self):
         print('Opening settings')
 
