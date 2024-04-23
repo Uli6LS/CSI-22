@@ -4,7 +4,8 @@ import pygame
 from entities.Enemy import Capivara, Carro, Boss
 from scenes.game import Map, Camera
 from config.settings import Settings
-from entities.Player import BoyPlayer, GirlPlayer
+from entities.Player import BoyPlayer, GirlPlayer, SapoNinja
+
 
 def run_game(personagem, screen):
     #pygame.init()
@@ -29,6 +30,8 @@ def run_game(personagem, screen):
         player= BoyPlayer(100, 100, 50, 50, velocidade=10)
     if(personagem ==2):
         player= GirlPlayer(100, 100, 50, 50, velocidade=10)
+    if (personagem == 3):
+        player = SapoNinja(100, 100, 50, 50, velocidade=10)
 
     # Loop do jogo
     clock = pygame.time.Clock()
@@ -77,7 +80,12 @@ def run_game(personagem, screen):
                 spawn_x = 1000  # Posição inicial do inimigo no eixo X
                 move_range = 2000  # Intervalo de movimento permitido (em pixels)
                 enemy2 = Carro(spawn_x, 400, 200, screen, player, game_maps[current_level-1], spawn_x, move_range)
-                
+
+                #auxiliar para colisão
+                enemy_group = pygame.sprite.Group()  # Grupo para os inimigos
+                enemy_group.add(enemy1, enemy2)  # Adiciona os inimigos ao grupo
+
+
             if ( current_level == 1 and player.rect.x >= MAP_WIDTH - 700): #se chegar no final do nivel 1 passa pro nivel 2
                 current_level += 1
                 camera.show_level_transition_screen(screen, current_level, 'Volte ao FUND, tem um exame te esperando')
@@ -133,6 +141,10 @@ def run_game(personagem, screen):
             # Update and draw the enemy
             enemy1.update()  
             enemy2.update()
+
+            #Adicionar colisao
+            if pygame.sprite.spritecollide(player, enemy_group, False):
+                player.make_hit()
 
         pygame.display.flip()
     pygame.quit()

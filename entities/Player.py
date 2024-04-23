@@ -28,7 +28,7 @@ class Player(pygame.sprite.Sprite):
 
     def make_hit(self):
         self.hit = True
-        self.hit_count = 0
+        #self.hit_count = 0
 
     def move_left(self):
         self.x_vel = -self.velocidade
@@ -58,6 +58,7 @@ class Player(pygame.sprite.Sprite):
         # Verificar colisão com o chão
         self.check_collision_with_ground(game_map)
 
+        #Verifica colisão com o inimigo
         if self.hit:
             self.hit_count += 1
             if self.hit_count > fps * 2:
@@ -96,7 +97,9 @@ class Player(pygame.sprite.Sprite):
 
     def update_sprite(self):
         sprite_sheet = "idle"
-        if self.y_vel < 0:
+        if self.hit:
+            sprite_sheet = "hit"
+        elif self.y_vel < 0:
             if self.jump_count == 1:
                 sprite_sheet = "jump"
             elif self.jump_count == 2:
@@ -139,3 +142,13 @@ class BoyPlayer(Player):
     def load_sprites(self):
         # Carrega os sprites do menino
         self.SPRITES = Imports().load_sprite_sheets("MainCharacters", "boy", 64, 96, True)
+
+
+class SapoNinja(Player):
+    def __init__(self, x, y, width, height, velocidade=5):
+        super().__init__(x, y, width, height, velocidade)
+        self.load_sprites()
+
+    def load_sprites(self):
+        # Carrega os sprites do menino
+        self.SPRITES = Imports().load_sprite_sheets("MainCharacters", "NinjaFrog", 32, 32, True)
