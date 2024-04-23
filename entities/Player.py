@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite):
     GRAVITY = 1
     ANIMATION_DELAY = 3
 
-    def __init__(self, x, y, width, height, velocidade=5, max_hits=3):
+    def __init__(self, x, y, width, height, velocidade=5, max_hits=5):
         super().__init__()
         self.rect = pygame.Rect(x, y, width, height)
         self.x_vel = 0

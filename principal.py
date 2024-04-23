@@ -42,7 +42,7 @@ def run_game(personagem, screen):
     inicio = True
 
     # Inicializa o contador de vidas para o jogador
-    life_counter = LifeCounter(initial_lives=3)  # Inicializa com 3 vidas
+    life_counter = LifeCounter(player)  # Inicializa com 3 vidas
 
 
     while run:
@@ -60,14 +60,6 @@ def run_game(personagem, screen):
                     camera.pausado(screen)
 
         if not paused:
-
-            # Verifica se o jogador ainda está vivo usando LifeCounter
-            if life_counter.get_vidas_restantes() > 0:
-                # O jogador está vivo
-                life_counter.alive = True
-            else:
-                # O jogador está morto
-                life_counter.alive = False
 
             # Verifica se o jogador ainda está vivo
             if not player.is_alive:
@@ -159,16 +151,18 @@ def run_game(personagem, screen):
             enemy1.draw(camera)  # Desenha o inimigo na tela
             enemy2.draw(camera)
 
-            life_counter.draw(screen)  # Desenha o painel de vidas na tela
+            life_counter.draw_hearts(screen)  # Desenha os corações cheios e vazios
 
             # Update and draw the enemy
             enemy1.update()  
             enemy2.update()
 
             #Adicionar colisao
+
             if pygame.sprite.spritecollide(player, enemy_group, False):
                 player.make_hit()
-                life_counter.perder_vida()  # Reduz o número de vidas restantes do jogador
+                hit = True
+                life_counter.perder_vida(hit)  # Reduz o número de vidas restantes do jogador
 
         pygame.display.flip()
     pygame.quit()
