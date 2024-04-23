@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite):
     GRAVITY = 1
     ANIMATION_DELAY = 3
 
-    def __init__(self, x, y, width, height, velocidade=5):
+    def __init__(self, x, y, width, height, velocidade=5, max_hits=3):
         super().__init__()
         self.rect = pygame.Rect(x, y, width, height)
         self.x_vel = 0
@@ -21,14 +21,21 @@ class Player(pygame.sprite.Sprite):
         self.hit_count = 0
         self.velocidade = velocidade
         self.load_sprites()
+        self.max_hits = max_hits  # Número máximo de hits que o jogador pode suportar
+        self.current_hits = 0  # Contador de hits recebidos
+        self.is_alive = True  # Indica se o jogador está vivo
 
     def move(self, dx, dy):
         self.rect.x += dx
         self.rect.y += dy
 
     def make_hit(self):
-        self.hit = True
-        #self.hit_count = 0
+        if not self.hit:
+            self.hit = True
+            self.hit_count = 0
+            self.current_hits += 1
+            if self.current_hits >= self.max_hits:
+                self.is_alive = False  # O jogador morreu
 
     def move_left(self):
         self.x_vel = -self.velocidade
