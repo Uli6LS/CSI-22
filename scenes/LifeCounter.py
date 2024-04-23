@@ -2,39 +2,38 @@ import pygame
 
 class LifeCounter:
     def __init__(self, player):
-        self.max_lives = player.max_hits  # Número máximo de vidas é igual ao número máximo de hits do jogador
-        self.current_lives = player.max_hits  # Número atual de vidas é inicializado como o máximo
-
-        # Carrega os sprites para representar os corações
+        self.max_lives = player.max_hits
+        self.current_lives = player.max_hits
         self.full_heart = pygame.image.load('assets/Items/LifeCounter/coracao_cheio.png').convert_alpha()
         self.empty_heart = pygame.image.load('assets/Items/LifeCounter/coracao_vazio.png').convert_alpha()
+        self.hearts = [True] * self.max_lives
+        self.hit_cooldown = 0  # Cooldown period in milliseconds
+        self.cooldown_period = 2000  # Cooldown period of 2 seconds
 
-        # Lista para armazenar o estado atual dos corações
-        self.hearts = [True] * self.max_lives  # Inicialmente todos os corações estão cheios
+    def perder_vida(self):
+        # Only lose a life if not in cooldown
+        if self.current_lives > 0 and self.hit_cooldown == 0:
+            self.hearts[self.current_lives - 1] = False
+            self.current_lives -= 1
+            self.hit_cooldown = pygame.time.get_ticks()  # Get the current time in milliseconds
 
-    def perder_vida(self, hit):
-        if hit:  # Usa diretamente o parâmetro hit
-            # Verifica se ainda há vidas restantes antes de subtrair
-            if self.current_lives > 0:
-                self.hearts[self.current_lives - 1] = False
-                self.current_lives -= 1
+    def update(self):
+        # Decrease cooldown counter if it's greater than 0
+        if self.hit_cooldown > 0:
+            # Check if 2 seconds have passed since the last hit
+            if pygame.time.get_ticks() - self.hit_cooldown >= self.cooldown_period:
+                self.hit_cooldown = 0  # Reset cooldown
 
     def draw_hearts(self, screen):
-        heart_width = self.full_heart.get_width()  # Largura de cada coração
-        x = 10  # Posição inicial para desenhar os corações
-
-        # Desenha os corações com base no estado atual da lista hearts
+        heart_width = self.full_heart.get_width()
+        x = 10
         for i, heart in enumerate(self.hearts):
             if heart:
-                # Desenha coração cheio se o coração estiver True (cheio)
                 screen.blit(self.full_heart, (x, 10))
             else:
-                # Desenha coração vazio se o coração estiver False (vazio)
                 screen.blit(self.empty_heart, (x, 10))
-
-            x += heart_width + 5  # Incrementa a posição para o próximo coração
-
-        # Desenha o texto com o número de vidas restantes
+            x += heart_width + 5
         font = pygame.font.Font(None, 36)
         text = font.render(f'Vidas Restantes: {self.current_lives}', True, (255, 255, 255))
-        screen.blit(text, (x + 20, 10))  # Posiciona o texto ao lado dos corações
+        screen.blit(text, (x + 20, 10))
+
