@@ -16,4 +16,9 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             exit()
+            
+    pygame.draw.rect(tela, (200, 0, 200), (200, 300, 40, 50))
+    
     pygame.display.update()
+    
+    
