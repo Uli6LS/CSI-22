@@ -1,5 +1,7 @@
 import pygame
 
+from config.settings import Settings
+game_settings = Settings()
 class LifeCounter:
     def __init__(self, player):
         self.max_lives = player.max_hits
@@ -8,7 +10,7 @@ class LifeCounter:
         self.empty_heart = pygame.image.load('assets/Items/LifeCounter/coracao_vazio.png').convert_alpha()
         self.hearts = [True] * self.max_lives
         self.hit_cooldown = 0  # Cooldown period in milliseconds
-        self.cooldown_period = 2000  # Cooldown period of 2 seconds
+        self.cooldown_period = game_settings.fps * 2  # Cooldown period of 2 seconds
 
     def perder_vida(self):
         # Only lose a life if not in cooldown
