@@ -129,7 +129,7 @@ def run_game(personagem, screen):
 
                 # Cria o inimigo da fase
 
-                spawn_x = MAP_WIDTH - 300  # Posição inicial do inimigo no eixo X
+                spawn_x = MAP_WIDTH - 1000  # Posição inicial do inimigo no eixo X
                 move_range = 300  # Intervalo de movimento permitido (em pixels)
                 enemy1 = Book(spawn_x, 270, 200, screen, player, game_maps[current_level - 1], spawn_x, move_range)
 
