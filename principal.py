@@ -2,6 +2,7 @@
 import pygame
 
 from entities.Enemy import Capivara, Carro, Boss
+from scenes.LifeCounter import LifeCounter
 from scenes.game import Map, Camera
 from config.settings import Settings
 from entities.Player import BoyPlayer, GirlPlayer, SapoNinja
@@ -40,6 +41,9 @@ def run_game(personagem, screen):
     current_level = 1
     inicio = True
 
+    # Inicializa o contador de vidas para o jogador
+    life_counter = LifeCounter(initial_lives=3)  # Inicializa com 3 vidas
+
     while run:
         clock.tick(game_settings.fps)
         for event in pygame.event.get():
@@ -55,11 +59,20 @@ def run_game(personagem, screen):
                     camera.pausado(screen)
 
         if not paused:
+
+            # Verifica se o jogador ainda está vivo usando LifeCounter
+            if life_counter.get_vidas_restantes() > 0:
+                # O jogador está vivo
+                life_counter.alive = True
+            else:
+                # O jogador está morto
+                life_counter.alive = False
+
             # Verifica se o jogador ainda está vivo
             if not player.is_alive:
-                # Encerra o loop do jogo se o jogador estiver morto
-                run = False
-                # Aqui você pode adicionar a lógica de fim de jogo, como mostrar uma tela de game over, reiniciar, etc.
+                # Se o jogador não estiver mais vivo, faça algo (ex: encerrar o jogo)
+                camera.show_death_screen(screen)  # Mostra a tela de morte
+                #run = False
 
             # Handle player input
             keys = pygame.key.get_pressed()
@@ -151,6 +164,7 @@ def run_game(personagem, screen):
             #Adicionar colisao
             if pygame.sprite.spritecollide(player, enemy_group, False):
                 player.make_hit()
+                life_counter.perder_vida()  # Reduz o número de vidas restantes do jogador
 
         pygame.display.flip()
     pygame.quit()

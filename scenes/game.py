@@ -9,6 +9,7 @@ class Camera:
         self.height = height
         self.mapwidth = mapwidth
         self.mapheight = mapheight
+        self.player_died = False  # Variável de controle para verificar se o jogador morreu
     
     def update(self):
         # Limita a câmera para não sair dos limites do mapa
@@ -49,6 +50,25 @@ class Camera:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:  # Quando o usuário apertar enter
                         waiting_for_key = False
+    def show_death_screen(self, screen):
+        font1 = pygame.font.Font(None, 74)
+        death_text = font1.render('Você Morreu', True, (255, 0, 0))
+        rect = pygame.Rect(0, 0, self.width, self.height)
+        pygame.draw.rect(screen, (0, 0, 0), rect)
+        screen.blit(death_text, (self.width/2 - death_text.get_width()/2, self.height/2 - death_text.get_height()/2))
+        pygame.display.flip()
+
+        waiting_for_key = True
+        while waiting_for_key:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    waiting_for_key = False
+                    self.player_died = False  # Reinicia a variável de controle ao sair do jogo
+                    break
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        waiting_for_key = False
+                        self.player_died = True  # Define a variável de controle como True ao pressionar espaço
 
 class Map:
     def __init__(self, filename):

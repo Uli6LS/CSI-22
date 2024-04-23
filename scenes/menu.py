@@ -26,6 +26,10 @@ class MainMenu:
         run_game(self.character, self.surface)
         pygame.quit()
 
+    def restart_game(self):
+        self.character = 1  # Reinicia o personagem para o padrão
+        self.run_game()  # Reinicia o jogo
+
     def settings(self):
         print('Opening settings')
 
