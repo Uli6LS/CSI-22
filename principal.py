@@ -131,7 +131,7 @@ def run_game(personagem, screen):
 
                 spawn_x = MAP_WIDTH - 1000  # Posição inicial do inimigo no eixo X
                 move_range = 300  # Intervalo de movimento permitido (em pixels)
-                enemy1 = Book(spawn_x, 270, 200, screen, player, game_maps[current_level - 1], spawn_x, move_range)
+                enemy1 = Book(spawn_x, 350, 200, screen, player, game_maps[current_level - 1], spawn_x, move_range)
 
                 spawn_x = MAP_WIDTH - 300  # Posição inicial do inimigo no eixo X
                 move_range = 300  # Intervalo de movimento permitido (em pixels)

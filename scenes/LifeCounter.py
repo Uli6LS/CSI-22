@@ -33,9 +33,9 @@ class LifeCounter:
             else:
                 screen.blit(self.empty_heart, (x, 10))
             x += heart_width + 5
-        font = pygame.font.Font(None, 36)
-        text = font.render(f'Vidas Restantes: {self.current_lives}', True, (255, 255, 255))
-        screen.blit(text, (x + 20, 10))
+        #font = pygame.font.Font(None, 36)
+        #text = font.render(f'Vidas Restantes: {self.current_lives}', True, (255, 255, 255))
+        #screen.blit(text, (x + 20, 10))
 
 # No loop principal do jogo, certifique-se de chamar o método update do LifeCounter
 # life_counter.update()
