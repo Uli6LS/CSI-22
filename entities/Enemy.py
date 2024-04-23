@@ -43,10 +43,15 @@ class Enemy(pygame.sprite.Sprite):
 
     def update_sprite(self):
         sprite_sheet_name = "run_" + self.direction
-        sprites = self.SPRITES[sprite_sheet_name]
-        sprite_index = (self.animation_count // self.ANIMATION_DELAY) % len(sprites)
-        self.sprite = sprites[sprite_index]
-        self.animation_count += 1
+        if sprite_sheet_name in self.SPRITES:
+            sprites = self.SPRITES[sprite_sheet_name]
+            sprite_index = (self.animation_count // self.ANIMATION_DELAY) % len(sprites)
+            self.sprite = sprites[sprite_index]
+            self.animation_count += 1
+        else:
+            # Handle missing sprite sheet gracefully (e.g., display a placeholder)
+            self.sprite = pygame.Surface((self.rect.width, self.rect.height))  # Placeholder surface
+            self.animation_count = 0  # Reset animation count
 
     def draw(self, camera):
         # Calcula a posição relativa ao cenário de fundo
