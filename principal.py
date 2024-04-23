@@ -44,6 +44,7 @@ def run_game(personagem, screen):
     # Inicializa o contador de vidas para o jogador
     life_counter = LifeCounter(initial_lives=3)  # Inicializa com 3 vidas
 
+
     while run:
         clock.tick(game_settings.fps)
         for event in pygame.event.get():
@@ -157,6 +158,8 @@ def run_game(personagem, screen):
             player.draw(screen, camera.camera.x)  # Desenha o jogador na tela
             enemy1.draw(camera)  # Desenha o inimigo na tela
             enemy2.draw(camera)
+
+            life_counter.draw(screen)  # Desenha o painel de vidas na tela
 
             # Update and draw the enemy
             enemy1.update()  
