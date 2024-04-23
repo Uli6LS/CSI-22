@@ -161,7 +161,10 @@ def run_game(personagem, screen):
 
             if pygame.sprite.spritecollide(player, enemy_group, False):
                 player.make_hit()
-                life_counter.perder_vida()  # Reduz o número de vidas restantes do jogador
+                if life_counter.hit_cooldown ==0 :#game_settings.fps *2:
+                    life_counter.perder_vida()  # Reduz o número de vidas restantes do jogador
+
+            life_counter.update()
 
         pygame.display.flip()
     pygame.quit()
