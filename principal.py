@@ -70,9 +70,10 @@ def run_game(personagem, screen):
 
             # Verifica se o jogador ainda está vivo
             if not player.is_alive:
-                # Se o jogador não estiver mais vivo, faça algo (ex: encerrar o jogo)
-                camera.show_death_screen(screen)  # Mostra a tela de morte
-                #run = False
+                space_pressed = camera.show_death_screen(screen)
+                if space_pressed:
+                    run_game(personagem, screen)  # Reinicia o jogo
+                    return  # Sai do loop atual
 
             # Handle player input
             keys = pygame.key.get_pressed()

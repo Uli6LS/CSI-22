@@ -9,8 +9,7 @@ class Camera:
         self.height = height
         self.mapwidth = mapwidth
         self.mapheight = mapheight
-        self.player_died = False  # Variável de controle para verificar se o jogador morreu
-    
+
     def update(self):
         # Limita a câmera para não sair dos limites do mapa
         self.camera.clamp_ip(pygame.Rect(0, 0, self.mapwidth, self.mapheight))
@@ -50,25 +49,37 @@ class Camera:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:  # Quando o usuário apertar enter
                         waiting_for_key = False
+
     def show_death_screen(self, screen):
         font1 = pygame.font.Font(None, 74)
+        font2 = pygame.font.Font(None, 34)
+
         death_text = font1.render('Você Morreu', True, (255, 0, 0))
+        return_text = font2.render('Pressione ESPAÇO para reiniciar a fase', True, (255, 255, 255))
+
         rect = pygame.Rect(0, 0, self.width, self.height)
         pygame.draw.rect(screen, (0, 0, 0), rect)
-        screen.blit(death_text, (self.width/2 - death_text.get_width()/2, self.height/2 - death_text.get_height()/2))
+
+        screen.blit(death_text,
+                    (self.width / 2 - death_text.get_width() / 2, self.height / 2 - death_text.get_height() / 2))
+        screen.blit(return_text, (self.width / 2 - return_text.get_width() / 2, self.height / 2 + 100))
+
         pygame.display.flip()
 
+        # Verifica se a tecla ESPAÇO foi pressionada para voltar ao menu principal
+        pressed_space = False
         waiting_for_key = True
         while waiting_for_key:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     waiting_for_key = False
-                    self.player_died = False  # Reinicia a variável de controle ao sair do jogo
                     break
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
+                        pressed_space = True
                         waiting_for_key = False
-                        self.player_died = True  # Define a variável de controle como True ao pressionar espaço
+
+        return pressed_space  # Retorna True se a tecla ESPAÇO foi pressionada, False caso contrário
 
 class Map:
     def __init__(self, filename):
