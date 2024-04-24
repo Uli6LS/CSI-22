@@ -7,12 +7,11 @@ class Player(pygame.sprite.Sprite):
     GRAVITY = 1
     ANIMATION_DELAY = 3
 
-    def __init__(self, x, y, width, height, velocidade=5, max_hits=10):
+    def __init__(self, x, y, width, height, velocidade=5, max_hits=7):
         super().__init__()
         self.rect = pygame.Rect(x, y, width, height)
         self.x_vel = 0
         self.y_vel = 0
-        self.mask = None
         self.direction = "left"
         self.animation_count = 0
         self.fall_count = 0
@@ -28,6 +27,9 @@ class Player(pygame.sprite.Sprite):
     def move(self, dx, dy):
         self.rect.x += dx
         self.rect.y += dy
+
+    def load_sprites(self):
+        raise NotImplementedError("O método load_sprites deve ser implementado pela classe filha.")
 
     def make_hit(self):
         if not self.hit:
@@ -104,8 +106,19 @@ class Player(pygame.sprite.Sprite):
 
     def update_sprite(self):
         sprite_sheet = "idle"
+        
         if self.hit:
-            sprite_sheet = "hit"
+            sprite_sheet = "idle_hit"
+            if self.y_vel < 0:
+                if self.jump_count == 1:
+                    sprite_sheet = "jump"
+                elif self.jump_count == 2:
+                    sprite_sheet = "double_jump"
+            elif self.y_vel > self.GRAVITY * 2:
+                sprite_sheet = "fall"
+            elif self.x_vel != 0:
+                sprite_sheet = "run_hit"
+
         elif self.y_vel < 0:
             if self.jump_count == 1:
                 sprite_sheet = "jump"

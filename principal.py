@@ -32,11 +32,11 @@ def run_game(personagem, screen):
 
     # Cria o player
     if( personagem == 1):
-        player= BoyPlayer(100, 100, 50, 50, velocidade=20)
+        player= BoyPlayer(100, 100, 50, 50, velocidade=15)
     if(personagem ==2):
-        player= GirlPlayer(100, 100, 50, 50, velocidade=20)
+        player= GirlPlayer(100, 100, 50, 50, velocidade=15)
     if (personagem == 3):
-        player = SapoNinja(100, 100, 50, 50, velocidade=20)
+        player = SapoNinja(100, 100, 50, 50, velocidade=15)
 
     # Loop do jogo
     clock = pygame.time.Clock()
