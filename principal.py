@@ -52,7 +52,6 @@ def run_game(personagem, screen):
     pygame.mixer.music.play(-1)  # O argumento -1 faz com que a música se repita continuamente
 
     enemy_list = []  # Lista para armazenar os inimigos
-
     while run:
         clock.tick(game_settings.fps)
         for event in pygame.event.get():
@@ -91,36 +90,24 @@ def run_game(personagem, screen):
                 # Cria o inimigo da fase
                 #spawn_x = 400  # Posição inicial do inimigo no eixo X
                 #move_range = 200  # Intervalo de movimento permitido (em pixels)
-                """
-                # Cria o inimigo da fase
-                spawn_x = 1000  # Posição inicial do inimigo no eixo X
-                move_range = 2000  # Intervalo de movimento permitido (em pixels)
-                enemy1 = Carro(spawn_x, 400, 200, screen, player, game_maps[current_level - 1], spawn_x, move_range)
 
-                # Cria o inimigo da fase
-                spawn_x = 400  # Posição inicial do inimigo no eixo X
-                move_range = 400  # Intervalo de movimento permitido (em pixels)
-                enemy2 = Capivara(spawn_x, 520, 200, screen, player, game_maps[current_level-1], spawn_x, move_range)
-
-                # Cria o inimigo da fase
-                spawn_x = 1800  # Posição inicial do inimigo no eixo X
-                move_range = 400  # Intervalo de movimento permitido (em pixels)
-                enemy3 = Capivara(spawn_x, 520, 200, screen, player, game_maps[current_level - 1], spawn_x, move_range)
-
-                # Cria o inimigo da fase
-                spawn_x = 2500  # Posição inicial do inimigo no eixo X
-                move_range = 400  # Intervalo de movimento permitido (em pixels)
-                enemy4 = Capivara(spawn_x, 520, 200, screen, player, game_maps[current_level - 1], spawn_x, move_range)
-
-                #auxiliar para colisão
-                enemy_group = pygame.sprite.Group()  # Grupo para os inimigos
-                enemy_group.add(enemy1, enemy2,enemy3, enemy4)  # Adiciona os inimigos ao grupo
-                """
                 fase1_inimigos = [
                     (1000, 2000, Carro),
                     (400, 400, Capivara),
                     (1800, 400, Capivara),
-                    (2500, 400, Capivara)
+                    (2500, 400, Capivara),
+                    (3500, 400, Capivara),
+                    (4500, 400, Capivara),
+                    (5500, 400, Capivara),
+                    (3000, 2000, Carro),
+                    (7500, 400, Capivara),
+                    (8500, 400, Capivara),
+                    (9500, 400, Capivara),
+                    (5000, 2000, Carro),
+                    (7000, 2000, Carro),
+                    (9000, 2000, Carro),
+                    (10500, 400, Capivara),
+                    (11500, 400, Capivara)
                 ]
 
                 enemy_group = pygame.sprite.Group()  # Grupo para os inimigos
@@ -137,38 +124,55 @@ def run_game(personagem, screen):
                     enemy_list.append(enemy)  # Adiciona o inimigo à lista
 
             if ( current_level == 1 and player.rect.x >= MAP_WIDTH - 700): #se chegar no final do nivel 1 passa pro nivel 2
+                enemy_list = []
                 current_level += 1
                 camera.show_level_transition_screen(screen, current_level, 'Volte ao FUND, tem um exame te esperando')
                 
                 player.rect.x =  MAP_WIDTH-400  # Reset player position
                 camera.camera.x =  MAP_WIDTH-400 # Reset camera position
 
-                # Cria o inimigo da fase
-                spawn_x = 5000  # Posição inicial do inimigo no eixo X
-                move_range = 400  # Intervalo de movimento permitido (em pixels)
-                enemy1 = Capivara(spawn_x, 520, 200, screen, player, game_maps[current_level-1], spawn_x, move_range)
 
-                # Cria o inimigo da fase
-                spawn_x = 5000  # Posição inicial do inimigo no eixo X
-                move_range = 2000  # Intervalo de movimento permitido (em pixels)
-                enemy3 = Capivara(spawn_x, 520, 200, screen, player, game_maps[current_level - 1], spawn_x, move_range)
+                # Lista de dados dos inimigos a serem criados
+                enemies_data = [
 
-                # Cria o inimigo da fase
-                spawn_x = 5000  # Posição inicial do inimigo no eixo X
-                move_range = 200  # Intervalo de movimento permitido (em pixels)
-                enemy4 = Capivara(spawn_x, 520, 200, screen, player, game_maps[current_level - 1], spawn_x, move_range)
+                    (500, 400, 200, Capivara),  # (spawn_x, move_range, enemy_type)
+                    (800, 2000, 200, Capivara),
+                    (1200, 2000, 200, Capivara),
+                    (1600, 2000, 200, Capivara),
+                    (2000, 2000, 200, Capivara),
+                    (2500, 2000, 200, Capivara),
+                    (3400, 2000, 200, Capivara),
+                    (4400, 2000, 200, Capivara),
+                    (5400, 2000, 200, Capivara),
+                    (6400, 2000, 200, Capivara),
+                    (7400, 2000, 200, Capivara),
+                    (8400, 2000, 200, Capivara),
+                    (9400, 2000, 200, Capivara),
+                    (10400, 2000, 200, Capivara),
+                    (11400, 2000, 200, Capivara),
+                    (3400, 2000, 200, Capivara),
+                    (5000, 200, 200, Capivara),
+                    (1000, 2000, 200, Carro),
+                    (3000, 2000, 200, Carro),
+                    (5000, 2000, 200, Carro),
+                    (5000, 2000, 200, Carro),
+                    (6000, 2000, 200, Carro),
+                    (8000, 2000, 200, Carro),
+                    (10000, 2000, 200, Carro),
 
-                # Cria o inimigo da fase
-                spawn_x = 5000  # Posição inicial do inimigo no eixo X
-                move_range = 2000  # Intervalo de movimento permitido (em pixels)
-                enemy2 = Carro(spawn_x, 400, 200, screen, player, game_maps[current_level-1], spawn_x, move_range)
+                ]
 
-                # auxiliar para colisão
                 enemy_group = pygame.sprite.Group()  # Grupo para os inimigos
-                enemy_group.add(enemy1, enemy2, enemy3, enemy4)  # Adiciona os inimigos ao grupo
 
+                # Iterar sobre a lista de dados dos inimigos
+                for spawn_x, move_range, size, enemy_type in enemies_data:
+                    enemy = enemy_type(spawn_x, 520 if enemy_type == Capivara else 400, size, screen, player,
+                                       game_maps[current_level - 1], spawn_x, move_range)
+                    enemy_group.add(enemy)  # Adicionar o inimigo ao grupo
+                    enemy_list.append(enemy)  # Adiciona o inimigo à lista
 
             if ( current_level == 2 and player.rect.x <= 200): #se chegar no inicio do nivel 2 passa pro nivel 3
+                enemy_list = []
                 current_level += 1
                 camera.show_level_transition_screen(screen, current_level, 'Encontre o exame no final do corredor')
                 player.rect.x =  0  # Reset player position
@@ -176,25 +180,22 @@ def run_game(personagem, screen):
 
                 # Cria o inimigo da fase
 
-                spawn_x = MAP_WIDTH - 1500  # Posição inicial do inimigo no eixo X
-                move_range = 300  # Intervalo de movimento permitido (em pixels)
-                enemy1 = Book(spawn_x, 350, 200, screen, player, game_maps[current_level - 1], spawn_x, move_range)
+                # Lista de dados dos inimigos a serem criados
+                enemies_data = [
+                    (MAP_WIDTH - 1500, 300, 350, Book),  # (spawn_x, move_range, size, enemy_type)
+                    (MAP_WIDTH - 300, 300, 270, Boss),
+                    (MAP_WIDTH - 3000, 300, 350, Zombie),
+                    (MAP_WIDTH - 4000, 300, 350, Zombie)
+                ]
 
-                spawn_x = MAP_WIDTH - 300  # Posição inicial do inimigo no eixo X
-                move_range = 300  # Intervalo de movimento permitido (em pixels)
-                enemy2 = Boss(spawn_x, 270, 200, screen, player, game_maps[current_level-1], spawn_x, move_range)
-                
-                spawn_x = MAP_WIDTH - 3000  # Posição inicial do inimigo no eixo X
-                move_range = 300  # Intervalo de movimento permitido (em pixels)
-                enemy3 = Zombie(spawn_x, 350, 200, screen, player, game_maps[current_level - 1], spawn_x, move_range)
-
-                spawn_x = MAP_WIDTH - 4000  # Posição inicial do inimigo no eixo X
-                move_range = 300  # Intervalo de movimento permitido (em pixels)
-                enemy4 = Zombie(spawn_x, 350, 200, screen, player, game_maps[current_level - 1], spawn_x, move_range)
-
-                # auxiliar para colisão
                 enemy_group = pygame.sprite.Group()  # Grupo para os inimigos
-                enemy_group.add(enemy1, enemy2, enemy3, enemy4)  # Adiciona os inimigos ao grupo
+
+                # Iterar sobre a lista de dados dos inimigos
+                for spawn_x, move_range, size, enemy_type in enemies_data:
+                    enemy = enemy_type(spawn_x, 350, size, screen, player, game_maps[current_level - 1], spawn_x,
+                                       move_range)
+                    enemy_group.add(enemy)  # Adicionar o inimigo ao grupo
+                    enemy_list.append(enemy)  # Adiciona o inimigo à lista
 
             if ( current_level == 3 and player.rect.x >= MAP_WIDTH-200): #se chegar no final, vence
                 current_level += 1
@@ -215,20 +216,7 @@ def run_game(personagem, screen):
             # Dentro do loop principal do jogo
             game_maps[current_level-1].draw(screen, camera)  # Desenha o mapa na tela
             player.draw(screen, camera.camera.x)  # Desenha o jogador na tela
-            """
-            enemy1.draw(camera)  # Desenha o inimigo na tela
-            enemy2.draw(camera)
 
-            # Update and draw the enemy
-            enemy1.update()
-            enemy2.update()
-
-            enemy3.draw(camera)
-            enemy4.draw(camera)
-
-            enemy3.update()
-            enemy4.update()
-            """
             # Desenhar e atualizar todos os inimigos na lista
             for enemy in enemy_list:
                 enemy.draw(camera)  # Desenha o inimigo na tela

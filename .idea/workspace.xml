@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3da3e0bb-45fd-4178-bcf0-111f127f8f48" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/assets/MainCharacters/Zombie/run.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/assets/Music/SubwaySurfers.mp3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/entities/Enemy.py" beforeDir="false" afterPath="$PROJECT_DIR$/entities/Enemy.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/principal.py" beforeDir="false" afterPath="$PROJECT_DIR$/principal.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -96,7 +93,7 @@
       <workItem from="1713841688623" duration="8241000" />
       <workItem from="1713880431740" duration="2814000" />
       <workItem from="1713901805855" duration="3090000" />
-      <workItem from="1713921532481" duration="3245000" />
+      <workItem from="1713921532481" duration="5211000" />
     </task>
     <servers />
   </component>
@@ -123,6 +120,6 @@
     <SUITE FILE_PATH="coverage/CSI_22$Enemy.coverage" NAME="Enemy Coverage Results" MODIFIED="1713899171853" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/entities" />
     <SUITE FILE_PATH="coverage/CSI_22$principal.coverage" NAME="principal Coverage Results" MODIFIED="1713921711660" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/CSI_22$Fire.coverage" NAME="Fire Coverage Results" MODIFIED="1713023844482" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/entities" />
-    <SUITE FILE_PATH="coverage/CSI_22$main.coverage" NAME="main Coverage Results" MODIFIED="1713924865839" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/CSI_22$main.coverage" NAME="main Coverage Results" MODIFIED="1713926867434" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
