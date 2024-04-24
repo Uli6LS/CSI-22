@@ -47,6 +47,7 @@ class Enemy(pygame.sprite.Sprite):
         sprite_index = (self.animation_count // self.ANIMATION_DELAY) % len(sprites)
         self.sprite = sprites[sprite_index]
         self.animation_count += 1
+        self.mask = pygame.mask.from_surface(self.sprite)
 
     def draw(self, camera):
         # Calcula a posição relativa ao cenário de fundo

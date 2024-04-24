@@ -121,6 +121,7 @@ class Player(pygame.sprite.Sprite):
         sprite_index = (self.animation_count // self.ANIMATION_DELAY) % len(sprites)
         self.sprite = sprites[sprite_index]
         self.animation_count += 1
+        self.mask = pygame.mask.from_surface(self.sprite)
         self.update()
 
     def update(self):
