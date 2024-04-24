@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite):
     GRAVITY = 1
     ANIMATION_DELAY = 3
 
-    def __init__(self, x, y, width, height, velocidade=5, max_hits=7):
+    def __init__(self, x, y, width, height, velocidade=5, max_hits=10):
         super().__init__()
         self.rect = pygame.Rect(x, y, width, height)
         self.x_vel = 0
@@ -140,7 +140,7 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         self.rect = self.sprite.get_rect(topleft=(self.rect.x, self.rect.y))
         self.mask = pygame.mask.from_surface(self.sprite)
-        self.rect.clamp_ip(pygame.Rect(0, 0, 12785, 640))
+        self.rect.clamp_ip(pygame.Rect(0, 0, 12780, 640))
 
     def draw(self, win, offset_x):
         win.blit(self.sprite, (self.rect.x - offset_x, self.rect.y))
