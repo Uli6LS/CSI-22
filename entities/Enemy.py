@@ -24,6 +24,9 @@ class Enemy(pygame.sprite.Sprite):
         self.load_sprites()
         self.update_sprite()
 
+    def load_sprites(self):
+        raise NotImplementedError("O método load_sprites deve ser implementado pela classe filha.")
+
     def update(self):
         # Atualiza a posição horizontal do inimigo com velocidade constante
         if self.direction == "right":
@@ -47,6 +50,7 @@ class Enemy(pygame.sprite.Sprite):
         sprite_index = (self.animation_count // self.ANIMATION_DELAY) % len(sprites)
         self.sprite = sprites[sprite_index]
         self.animation_count += 1
+        self.mask = pygame.mask.from_surface(self.sprite)
 
     def draw(self, camera):
         # Calcula a posição relativa ao cenário de fundo

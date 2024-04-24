@@ -12,7 +12,6 @@ class Player(pygame.sprite.Sprite):
         self.rect = pygame.Rect(x, y, width, height)
         self.x_vel = 0
         self.y_vel = 0
-        self.mask = None
         self.direction = "left"
         self.animation_count = 0
         self.fall_count = 0
@@ -28,6 +27,10 @@ class Player(pygame.sprite.Sprite):
     def move(self, dx, dy):
         self.rect.x += dx
         self.rect.y += dy
+
+    def load_sprites(self):
+        raise NotImplementedError("O método load_sprites deve ser implementado pela classe filha.")
+
 
     def make_hit(self):
         if not self.hit:
@@ -121,6 +124,7 @@ class Player(pygame.sprite.Sprite):
         sprite_index = (self.animation_count // self.ANIMATION_DELAY) % len(sprites)
         self.sprite = sprites[sprite_index]
         self.animation_count += 1
+        self.mask = pygame.mask.from_surface(self.sprite)
         self.update()
 
     def update(self):
