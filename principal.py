@@ -32,11 +32,11 @@ def run_game(personagem, screen):
 
     # Cria o player
     if( personagem == 1):
-        player= BoyPlayer(100, 100, 50, 50, velocidade=10)
+        player= BoyPlayer(100, 100, 50, 50, velocidade=20)
     if(personagem ==2):
-        player= GirlPlayer(100, 100, 50, 50, velocidade=10)
+        player= GirlPlayer(100, 100, 50, 50, velocidade=20)
     if (personagem == 3):
-        player = SapoNinja(100, 100, 50, 50, velocidade=30)
+        player = SapoNinja(100, 100, 50, 50, velocidade=20)
 
     # Loop do jogo
     clock = pygame.time.Clock()
@@ -183,16 +183,31 @@ def run_game(personagem, screen):
                 # Lista de dados dos inimigos a serem criados
                 enemies_data = [
                     (MAP_WIDTH - 1500, 300, 350, Book),  # (spawn_x, move_range, size, enemy_type)
-                    (MAP_WIDTH - 300, 300, 270, Boss),
-                    (MAP_WIDTH - 3000, 300, 350, Zombie),
-                    (MAP_WIDTH - 4000, 300, 350, Zombie)
+                    (MAP_WIDTH - 300, 300, 500, Boss),
+                    (400, 300, 350, Zombie),
+                    (800, 300, 350, Zombie),
+                    (1200, 300, 350, Zombie),
+                    (1600, 300, 350, Zombie),
+                    (2000, 300, 350, Zombie),
+                    (2400, 300, 350, Zombie),
+                    (3000, 300, 350, Zombie),
+                    (3500, 300, 350, Zombie),
+                    (4500, 300, 350, Zombie),
+                    (5500, 300, 350, Zombie),
+                    (6500, 300, 350, Zombie),
+                    (7500, 300, 350, Zombie),
+                    (8500, 300, 350, Zombie),
+                    (9500, 300, 350, Book),
+                    (10500, 300, 350, Book),
+                    (11000, 300, 350, Book),
+                    (11500, 300, 350, Book),
                 ]
 
                 enemy_group = pygame.sprite.Group()  # Grupo para os inimigos
 
                 # Iterar sobre a lista de dados dos inimigos
                 for spawn_x, move_range, size, enemy_type in enemies_data:
-                    enemy = enemy_type(spawn_x, 350, size, screen, player, game_maps[current_level - 1], spawn_x,
+                    enemy = enemy_type(spawn_x, 400 if (enemy_type == Zombie or enemy_type == Book) else 250, size, screen, player, game_maps[current_level - 1], spawn_x,
                                        move_range)
                     enemy_group.add(enemy)  # Adicionar o inimigo ao grupo
                     enemy_list.append(enemy)  # Adiciona o inimigo à lista
@@ -225,7 +240,6 @@ def run_game(personagem, screen):
             life_counter.draw_hearts(screen)  # Desenha os corações cheios e vazios
 
             #Adicionar colisao
-
             if pygame.sprite.spritecollide(player, enemy_group, False):
                 player.make_hit()
                 if life_counter.hit_cooldown ==0 :#game_settings.fps *2:
