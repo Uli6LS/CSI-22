@@ -13,10 +13,10 @@ class MainMenu:
         self.character = 1
         self.width=width
         self.height=height
-        self.menu.add.selector('Choose character: ', [('Bixo', 1), ('Bixete', 2),('Sapo Ninja', 3)], onchange=self.set_character)
-        self.menu.add.button('Start Game', self.start_game)
-        self.menu.add.button('Settings', self.settings)
-        self.menu.add.button('Quit', pygame_menu.events.EXIT)
+        self.menu.add.selector('Escolher Personagem: ', [('Bixo', 1), ('Bixete', 2),('Sapo Ninja', 3)], onchange=self.set_character)
+        self.menu.add.button('Começar Jogo', self.start_game)
+        self.menu.add.button('Configurações', self.settings)
+        self.menu.add.button('Sair', pygame_menu.events.EXIT)
 
     def set_character(self, value, index):
         self.character = index
